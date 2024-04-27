@@ -1,0 +1,39 @@
+ {
+    "categories": [
+        {
+            "id": 6,
+            "name": "new",
+            "image": "CZMzKuyCleWQFWaWclEixcyuMOZEpLX7.jpg",
+            "created_at": "2024-04-22T22:30:02.000000Z",
+            "updated_at": "2024-04-22T22:55:50.000000Z"
+        },
+        {
+            "id": 8,
+            "name": "photography",
+            "image": "MlM5qCjHMN052GK3bdRamsg8e2GD9Ekp.jpg",
+            "created_at": "2024-04-22T22:38:48.000000Z",
+            "updated_at": "2024-04-22T22:38:48.000000Z"
+        },
+        {
+            "id": 9,
+            "name": "jjjjojoj",
+            "image": "CYSqrvUqwxZOqR7cFLr0wxRev8y21xaH.jpg",
+            "created_at": "2024-04-22T23:01:22.000000Z",
+            "updated_at": "2024-04-22T23:01:22.000000Z"
+        },
+        {
+            "id": 12,
+            "name": "jjjjojoj444",
+            "image": "ONkSZ6h26soN2boc2dWn78VepOYLjif5.jpg",
+            "created_at": "2024-04-22T23:05:05.000000Z",
+            "updated_at": "2024-04-22T23:05:05.000000Z"
+        },
+        {
+            "id": 14,
+            "name": "new2",
+            "image": "ogRX7LgWn8v6nf9QIR4aBiR3qHGJcCKu.png",
+            "created_at": "2024-04-23T08:47:47.000000Z",
+            "updated_at": "2024-04-23T08:47:47.000000Z"
+        }
+    ]
+}

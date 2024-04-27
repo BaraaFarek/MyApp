@@ -1,0 +1,140 @@
+{
+	"info": {
+		"_postman_id": "b246786e-12a4-44e0-99c4-f6a0f99a8bea",
+		"name": "testbaraa",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33999469"
+	},
+	"item": [
+		{
+			"name": "all categories",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/categories",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "show one category",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/categories/4",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"categories",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createcategory",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/createcategory?name=Baber",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"createcategory"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Baber"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updatecategory",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/updatecategory/6?name=Clothes",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"updatecategory",
+						"6"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Clothes"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "destroycategory",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/destroycategory/8",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"destroycategory",
+						"8"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
