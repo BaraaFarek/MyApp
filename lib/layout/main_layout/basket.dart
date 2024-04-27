@@ -18,7 +18,7 @@ class basket_screen extends StatefulWidget {
 }
 
 class _basket_screenState extends State<basket_screen> {
-  List list = [];
+  List<one_category>? list;
   @override
   Widget build(BuildContext context) {
     var cubit = app_cubit.get(context);
@@ -43,7 +43,9 @@ class _basket_screenState extends State<basket_screen> {
                           child: ElevatedButton(
                               onPressed: () {
                                 setState(() {
-                                  selectedName = catego[0].name;
+                                  selectedName =
+                                      list?[0].category?.image ?? 'a';
+                                  print(selectedName);
                                 });
                               },
                               child: Text(selectedName))),
@@ -57,9 +59,9 @@ class _basket_screenState extends State<basket_screen> {
   one_categories() async {
     final jsonText =
         await rootBundle.loadString('assets/json/one_category.json');
-    list = await List<one_category>.from(
+    final x = List<one_category>.from(
         json.decode(jsonText).map((e) => one_category.fromJson(e))).toList();
-    print(list[0]);
+    list = x;
     return list;
   }
 }
