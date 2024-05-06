@@ -26,42 +26,49 @@ class home1 extends StatelessWidget {
         listener: (BuildContext context, app_states state) {},
         builder: (BuildContext context, app_states state) {
           var cubit = app_cubit.get(context);
-          return SafeArea(
-            child: Scaffold(
-              appBar: AppBar(
-                elevation: 0.0,
-                actions: [
-                  IconButton(onPressed: () {}, icon: Icon(Icons.search)),
-                  IconButton(
-                      onPressed: () {
-                        app_cubit.get(context).changeMode();
-                      },
-                      icon: Icon(Icons.brightness_4)),
-                ],
-                title: Text(
-                  app_cubit
-                      .get(context)
-                      .titles[app_cubit.get(context).currentindex],
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.purpleAccent,
-                  ),
+          return Scaffold(
+            // backgroundColor: cubit.isdark ? Colors.white : Colors.grey,
+            appBar: AppBar(
+              backgroundColor: cubit.isdark ? Colors.grey[500] : Colors.white,
+              elevation: 0.0,
+              actions: [
+                IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.search,
+                      color: cubit.isdark ? Colors.white : Colors.black,
+                    )),
+                IconButton(
+                    onPressed: () {
+                      app_cubit.get(context).changeMode();
+                    },
+                    icon: Icon(
+                      cubit.isdark ? Icons.sunny : Icons.brightness_3_sharp,
+                      color: cubit.isdark ? Colors.white : Colors.black,
+                    )),
+              ],
+              title: Text(
+                'Ballon',
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontFamily: 'ITCKRIST.TTF',
+                  color: cubit.isdark ? Colors.white : Colors.purpleAccent,
                 ),
               ),
-              body: cubit.screens[cubit.currentindex],
-              bottomNavigationBar: BottomNavigationBar(
-                items: cubit.bottomItems,
-                // fixed  لما بنكبس على وحدة ما بتغير الباقي
-                type: BottomNavigationBarType.fixed,
-                showSelectedLabels: true,
-                selectedItemColor: Colors.purple,
-                unselectedItemColor: Colors.grey,
-                showUnselectedLabels: false,
-                currentIndex: cubit.currentindex,
-                onTap: (index) {
-                  cubit.changeIndex(index);
-                },
-              ),
+            ),
+            body: cubit.screens[cubit.currentindex],
+            bottomNavigationBar: BottomNavigationBar(
+              items: cubit.bottomItems,
+              // fixed  لما بنكبس على وحدة ما بتغير الباقي
+              type: BottomNavigationBarType.fixed,
+              showSelectedLabels: true,
+              selectedItemColor: Colors.purple,
+              unselectedItemColor: Colors.grey,
+              showUnselectedLabels: false,
+              currentIndex: cubit.currentindex,
+              onTap: (index) {
+                cubit.changeIndex(index);
+              },
             ),
           );
         },

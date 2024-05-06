@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:untitled/Network/remote/DioHelper.dart';
+import 'package:untitled/layout/main_layout/Home_Screen.dart';
 import 'package:untitled/layout/main_layout/basket.dart';
 
 import 'package:untitled/layout/main_layout/cubit/app_cubit.dart';
@@ -30,19 +31,19 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
               debugShowCheckedModeBanner: false,
               theme: ThemeData(
+                  scaffoldBackgroundColor: Colors.white,
                   floatingActionButtonTheme: FloatingActionButtonThemeData(
                     backgroundColor: Colors.blueAccent,
                   ),
-                  scaffoldBackgroundColor: Colors.white,
                   bottomNavigationBarTheme: BottomNavigationBarThemeData(
                     type: BottomNavigationBarType.fixed,
                   ),
                   appBarTheme: AppBarTheme(
+                    actionsIconTheme: IconThemeData(
+                      color: Colors.black,
+                    ),
                     elevation: 0.0,
                     // backwardsCompatibility :false,
-                    systemOverlayStyle: SystemUiOverlayStyle(
-                        statusBarColor: Colors.white,
-                        statusBarIconBrightness: Brightness.light),
                     backgroundColor: Colors.white,
                     iconTheme: IconThemeData(
                       color: Colors.black,
@@ -55,40 +56,40 @@ class MyApp extends StatelessWidget {
                   iconTheme: IconThemeData(
                     color: Colors.black,
                   )),
-              // // dark mode
-              // darkTheme: ThemeData(
-              //     scaffoldBackgroundColor: Colors.grey,
-              //     // scaffoldBackgroundColor: HexColor('333739'),
-              //     bottomNavigationBarTheme: BottomNavigationBarThemeData(
-              //         type: BottomNavigationBarType.fixed,
-              //         backgroundColor: Colors.grey,
-              //         selectedIconTheme: IconThemeData(
-              //           color: Colors.purpleAccent,
-              //         ),
-              //         unselectedIconTheme: IconThemeData(
-              //           color: Colors.white70,
-              //         ),
-              //         unselectedLabelStyle: TextStyle(
-              //           color: Colors.white,
-              //         )),
-              //     appBarTheme: AppBarTheme(
-              //       backgroundColor: Colors.grey,
-              //       elevation: 0.0,
-              //       iconTheme: IconThemeData(
-              //         color: Colors.grey,
-              //       ),
-              //       titleTextStyle: TextStyle(
-              //           fontWeight: FontWeight.bold,
-              //           fontSize: 23.0,
-              //           color: Colors.white),
-              //       systemOverlayStyle: SystemUiOverlayStyle(
-              //           statusBarColor: Colors.white,
-              //           statusBarIconBrightness: Brightness.dark),
-              //     )),
-              // themeMode: app_cubit.get(context).isdark
-              //     ? ThemeMode.dark
-              //     : ThemeMode.light,
-              home: basket_screen());
+              // dark mode
+              darkTheme: ThemeData(
+                  scaffoldBackgroundColor: Colors.grey,
+                  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+                      type: BottomNavigationBarType.fixed,
+                      backgroundColor: Colors.grey,
+                      selectedIconTheme: IconThemeData(
+                        color: Colors.purpleAccent,
+                      ),
+                      unselectedIconTheme: IconThemeData(
+                        color: Colors.white70,
+                      ),
+                      unselectedLabelStyle: TextStyle(
+                        color: Colors.white,
+                      )),
+                  appBarTheme: AppBarTheme(
+                    actionsIconTheme: IconThemeData(color: Colors.white),
+                    backgroundColor: Colors.grey,
+                    elevation: 0.0,
+                    iconTheme: IconThemeData(
+                      color: Colors.white,
+                    ),
+                    titleTextStyle: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 23.0,
+                        color: Colors.white),
+                    systemOverlayStyle: SystemUiOverlayStyle(
+                        statusBarColor: Colors.white,
+                        statusBarIconBrightness: Brightness.dark),
+                  )),
+              themeMode: app_cubit.get(context).isdark
+                  ? ThemeMode.dark
+                  : ThemeMode.light,
+              home: home1());
         },
       ),
     );

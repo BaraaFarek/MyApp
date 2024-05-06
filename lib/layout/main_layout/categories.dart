@@ -20,9 +20,9 @@ class Categories_screen extends StatelessWidget {
         children: [
           Row(),
           SizedBox(
-            height: 560,
+            height: 500,
             child: ListView.builder(
-              itemCount: 10, // عدد العناصر التي ترغب في عرضها
+              itemCount: 5, // عدد العناصر التي ترغب في عرضها
               itemBuilder: (context, index) {
                 return ListTile(
                   leading: Icon(Icons.person), // العنصر الأول في كل سطر
