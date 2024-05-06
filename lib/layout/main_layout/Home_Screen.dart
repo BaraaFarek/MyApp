@@ -27,7 +27,7 @@ class home1 extends StatelessWidget {
         builder: (BuildContext context, app_states state) {
           var cubit = app_cubit.get(context);
           return Scaffold(
-            // backgroundColor: cubit.isdark ? Colors.white : Colors.grey,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             appBar: AppBar(
               backgroundColor: cubit.isdark ? Colors.grey[500] : Colors.white,
               elevation: 0.0,
@@ -59,11 +59,12 @@ class home1 extends StatelessWidget {
             body: cubit.screens[cubit.currentindex],
             bottomNavigationBar: BottomNavigationBar(
               items: cubit.bottomItems,
+              backgroundColor: cubit.isdark ? Colors.grey : Colors.white,
               // fixed  لما بنكبس على وحدة ما بتغير الباقي
               type: BottomNavigationBarType.fixed,
               showSelectedLabels: true,
               selectedItemColor: Colors.purple,
-              unselectedItemColor: Colors.grey,
+              unselectedItemColor: cubit.isdark ? Colors.white : Colors.grey,
               showUnselectedLabels: false,
               currentIndex: cubit.currentindex,
               onTap: (index) {

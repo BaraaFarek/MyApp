@@ -10,8 +10,6 @@ import 'package:untitled/layout/main_layout/cubit/app_cubit.dart';
 import 'package:untitled/layout/main_layout/cubit/app_states.dart';
 import 'package:untitled/modules/login/login_screen.dart';
 
-import 'package:untitled/test_screen.dart';
-
 void main() {
   DioHelper.init();
   runApp(const MyApp());
@@ -28,23 +26,27 @@ class MyApp extends StatelessWidget {
       child: BlocConsumer<app_cubit, app_states>(
         listener: (context, state) {},
         builder: (context, state) {
+          var cubit = app_cubit.get(context);
           return MaterialApp(
               debugShowCheckedModeBanner: false,
               theme: ThemeData(
                   scaffoldBackgroundColor: Colors.white,
-                  floatingActionButtonTheme: FloatingActionButtonThemeData(
-                    backgroundColor: Colors.blueAccent,
-                  ),
-                  bottomNavigationBarTheme: BottomNavigationBarThemeData(
-                    type: BottomNavigationBarType.fixed,
-                  ),
+                  // bottomNavigationBarTheme: BottomNavigationBarThemeData(
+                  //   selectedIconTheme: IconThemeData(
+                  //     color: Colors.purpleAccent,
+                  //   ),
+                  //   unselectedIconTheme: IconThemeData(
+                  //     color: Colors.grey,
+                  //   ),
+                  //   unselectedLabelStyle: TextStyle(
+                  //     color: Colors.grey,
+                  //   ),
+                  //   type: BottomNavigationBarType.fixed,
+                  // ),
                   appBarTheme: AppBarTheme(
                     actionsIconTheme: IconThemeData(
                       color: Colors.black,
                     ),
-                    elevation: 0.0,
-                    // backwardsCompatibility :false,
-                    backgroundColor: Colors.white,
                     iconTheme: IconThemeData(
                       color: Colors.black,
                     ),
@@ -59,22 +61,19 @@ class MyApp extends StatelessWidget {
               // dark mode
               darkTheme: ThemeData(
                   scaffoldBackgroundColor: Colors.grey,
-                  bottomNavigationBarTheme: BottomNavigationBarThemeData(
-                      type: BottomNavigationBarType.fixed,
-                      backgroundColor: Colors.grey,
-                      selectedIconTheme: IconThemeData(
-                        color: Colors.purpleAccent,
-                      ),
-                      unselectedIconTheme: IconThemeData(
-                        color: Colors.white70,
-                      ),
-                      unselectedLabelStyle: TextStyle(
-                        color: Colors.white,
-                      )),
+                  // bottomNavigationBarTheme: BottomNavigationBarThemeData(
+                  //     type: BottomNavigationBarType.fixed,
+                  //     selectedIconTheme: IconThemeData(
+                  //       color: Colors.purpleAccent,
+                  //     ),
+                  //     unselectedIconTheme: IconThemeData(
+                  //       color: Colors.white70,
+                  //     ),
+                  //     unselectedLabelStyle: TextStyle(
+                  //       color: Colors.white,
+                  //     )),
                   appBarTheme: AppBarTheme(
                     actionsIconTheme: IconThemeData(color: Colors.white),
-                    backgroundColor: Colors.grey,
-                    elevation: 0.0,
                     iconTheme: IconThemeData(
                       color: Colors.white,
                     ),
@@ -82,9 +81,6 @@ class MyApp extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         fontSize: 23.0,
                         color: Colors.white),
-                    systemOverlayStyle: SystemUiOverlayStyle(
-                        statusBarColor: Colors.white,
-                        statusBarIconBrightness: Brightness.dark),
                   )),
               themeMode: app_cubit.get(context).isdark
                   ? ThemeMode.dark

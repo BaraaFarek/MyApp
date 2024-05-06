@@ -1,5 +1,3 @@
-import 'package:untitled/models/get_one_category.dart';
-
 abstract class app_states {}
 
 class initial_app_states extends app_states {}
@@ -39,7 +37,4 @@ class CategoriesErrorState extends app_states {
   CategoriesErrorState(this.error);
 }
 
-class CategoriesSuccessState extends app_states {
-  final get_one_category categoryModel;
-  CategoriesSuccessState(this.categoryModel);
-}
+class CategoriesSuccessState extends app_states {}

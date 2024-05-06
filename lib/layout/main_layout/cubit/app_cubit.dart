@@ -11,11 +11,7 @@ import 'package:untitled/layout/main_layout/cubit/app_states.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled/layout/main_layout/delivery_screen.dart';
 import 'package:untitled/layout/main_layout/categories.dart';
-import 'package:untitled/models/all_categories_model.dart';
-import 'package:untitled/models/one_category.dart';
-import 'package:untitled/shared/network/remote/Dio_network.dart';
 
-import '../../../category_model.dart';
 import '../../../shared/components/constants/host.dart';
 
 class app_cubit extends Cubit<app_states> {
@@ -23,7 +19,7 @@ class app_cubit extends Cubit<app_states> {
 
   static app_cubit get(context) => BlocProvider.of(context);
   int currentindex = 0;
-  bool isdark = true;
+  bool isdark = false;
   TextEditingController email_controller = TextEditingController();
   TextEditingController password_controller = TextEditingController();
   ThemeMode appMode = ThemeMode.dark;
@@ -142,29 +138,6 @@ class app_cubit extends Cubit<app_states> {
       "email": "....",
       "password": "12345",
     });
-  }
-
-  Future<http.Response> getCategories(String url) async {
-    try {
-      emit(CategoriesLoadingState());
-      var response = await http.get(Uri.parse(url));
-      get_one_category get_category =
-          get_one_category.fromJson(response as Map<String, dynamic>);
-      Map<String, dynamic> data = jsonDecode(response.body);
-      return data['image'];
-    } catch (e) {
-      emit(CategoriesErrorState(e.toString()));
-      throw Exception('Failed to load data');
-    }
-  }
-
-  categories(String url) async {
-    final jsonText =
-        await rootBundle.loadString('assets/json/all_categories.json');
-    final list = List<all_categories_model>.from(
-            json.decode(jsonText).map((e) => all_categories_model.fromJson(e)))
-        .toList();
-    return list;
   }
 }
 
