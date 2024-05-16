@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:untitled/Network/endpoints.dart';
+import 'package:untitled/Network/local/cache_Helper.dart';
 import 'package:untitled/Network/remote/DioHelper.dart';
 import 'package:untitled/layout/main_layout/basket.dart';
 import 'package:http/http.dart' as http;
@@ -11,15 +13,14 @@ import 'package:untitled/layout/main_layout/cubit/app_states.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled/layout/main_layout/delivery_screen.dart';
 import 'package:untitled/layout/main_layout/categories.dart';
-
-import '../../../shared/components/constants/host.dart';
+import 'package:untitled/models/Login/Login_Model.dart';
 
 class app_cubit extends Cubit<app_states> {
   app_cubit() : super(initial_app_states());
 
   static app_cubit get(context) => BlocProvider.of(context);
   int currentindex = 0;
-  bool isdark = false;
+  bool isdark = true;
   TextEditingController email_controller = TextEditingController();
   TextEditingController password_controller = TextEditingController();
   ThemeMode appMode = ThemeMode.dark;
@@ -35,6 +36,7 @@ class app_cubit extends Cubit<app_states> {
       label: 'delivery ',
     ),
   ];
+  late LoginModel loginModel;
   List<Widget> screens = [
     Categories_screen(),
     Messenger_screen(),
@@ -48,10 +50,22 @@ class app_cubit extends Cubit<app_states> {
     'delivery',
   ];
 
-  _getString() async {
-    var res =
-        await http.get(Uri.parse("http://127.0.0.1:8000/api/categories/8"));
-    if (res.statusCode == 200) return jsonDecode(res.body);
+  void userLogin({
+    required String email,
+    required String password,
+  }) {
+    emit(LogInLoading());
+    DioHelper.postData(url: LoginPath, data: {
+      'email': email,
+      'password': password,
+    }).then((value) {
+      print(value.data);
+      loginModel = LoginModel.fromJson(value.data);
+      print(loginModel.message);
+      emit(LogInSuccess(loginModel));
+    }).catchError((error) {
+      emit(LogInFailure(errorMessage: error.toString()));
+    });
   }
 
   void changeIndex(int index) {
@@ -60,8 +74,16 @@ class app_cubit extends Cubit<app_states> {
   }
 
   void changeMode() {
-    isdark = !isdark;
+    // if (fromshared != null) {
     emit(app_changeMode_states());
+    //   // isdark = fromshared;
+    // } else {
+    isdark = !isdark;
+    // }
+    // }
+    // CacheHelper.setData(key: 'isdark', value: isdark).then((value) {
+    //   emit(app_changeMode_states());
+    // });
   }
 
   LogIn() async {
@@ -132,11 +154,18 @@ class app_cubit extends Cubit<app_states> {
     }
   }
 
-  void register(String email, String password) async {
-    Uri url = Uri.http(host, 'api/users/register');
-    var response = await http.post(url, body: {
-      "email": "....",
-      "password": "12345",
+  List<dynamic> category = [];
+  void getCategory() {
+    emit(CategoriesLoadingState());
+    DioHelper.getcategory(
+            url: 'https://testsala.000webhostapp.com/api/categories')
+        .then((value) {
+      category = value.data['articles'];
+      print(category[0]['title']);
+      emit(CategoriesSuccessState());
+    }).catchError((error) {
+      print(error.toString());
+      emit(CategoriesErrorState(error.toString()));
     });
   }
 }

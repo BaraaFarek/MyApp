@@ -6,18 +6,28 @@ class DioHelper {
   static var dio;
   static init() {
     dio = Dio(BaseOptions(
-      baseUrl: 'http://127.0.0.1:8000/api/',
+      baseUrl: 'http://127.0.0.1:8000',
       receiveDataWhenStatusError: true,
     ));
+    // headers: {'Content-Type': 'application/json'}));
   }
 
-  static Future<Response> get(
-      {required String? url, required Map<String, dynamic>? query}) async {
-    return await dio.get(url, queryParameters: query);
+  static Future<Response> getcategory({required String? url}) async {
+    return await dio.get(url);
   }
 
-  static Future<Response> getData(
-      {required String? url, required Map<String, dynamic>? query}) async {
-    return await dio.get(url, queryParameters: query);
+  static Future<Response> postData(
+      {required String? url,
+      // String lang ='ar';
+      // String token ;
+      Map<String, dynamic>? query,
+      required Map<String, dynamic> data}) async {
+    //لو عنا headerمتغيرة
+    // dio.options.headers{
+    //     'lang' : lang,
+    //     'token' : token,
+    //   }
+    // );
+    return await dio.post(url, queryParameters: query, data: data);
   }
 }

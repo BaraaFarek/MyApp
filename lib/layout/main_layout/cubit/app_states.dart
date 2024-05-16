@@ -1,3 +1,5 @@
+import 'package:untitled/models/Login/Login_Model.dart';
+
 abstract class app_states {}
 
 class initial_app_states extends app_states {}
@@ -18,14 +20,39 @@ class NewsBussinesErrorState extends app_states {
 
 class NewsLoadingState extends app_states {}
 
-class SignInSuccess extends app_states {}
+/////////////////////////////////////////////////////////////////////
+
+class LogInSuccess extends app_states {
+  final LoginModel loginModel;
+
+  LogInSuccess(
+    this.loginModel,
+  );
+}
+
+class LogInInitial extends app_states {}
 
 class SignInLoading extends app_states {}
+
+class LogInFailure extends app_states {
+  final String errorMessage;
+  LogInFailure({required this.errorMessage});
+}
+
+//////////////////////////////////////////////////////////////////////
+
+class SignInSuccess extends app_states {}
+
+class SignInInitial extends app_states {}
+
+class LogInLoading extends app_states {}
 
 class SignInFailure extends app_states {
   final String errorMessage;
   SignInFailure({required this.errorMessage});
 }
+
+//////////////////////////////////////////////////////////////////////
 
 class initial_Categories extends app_states {}
 

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:untitled/Network/remote/DioHelper.dart';
 import 'package:untitled/layout/main_layout/Account.dart';
+import 'package:untitled/layout/main_layout/Search_screen.dart';
 import 'package:untitled/layout/main_layout/basket.dart';
 import 'package:untitled/layout/main_layout/messenger1.dart';
 import 'package:untitled/layout/main_layout/cubit/app_states.dart';
 import 'package:untitled/layout/main_layout/delivery_screen.dart';
 import 'package:untitled/layout/main_layout/categories.dart';
-
 import 'package:untitled/layout/main_layout/cubit/app_cubit.dart';
 
 class home1 extends StatelessWidget {
@@ -28,13 +28,18 @@ class home1 extends StatelessWidget {
           var cubit = app_cubit.get(context);
           return SafeArea(
             child: Scaffold(
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               appBar: AppBar(
+                automaticallyImplyLeading: false,
                 backgroundColor: cubit.isdark ? Colors.grey[500] : Colors.white,
                 elevation: 0.0,
                 actions: [
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SearchScreen()));
+                      },
                       icon: Icon(
                         Icons.search,
                         color: cubit.isdark ? Colors.white : Colors.black,
@@ -52,12 +57,25 @@ class home1 extends StatelessWidget {
                   ' Ballon',
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
-                    fontSize: 32.0,
+                    fontSize: 30.0,
                     fontFamily: 'ITCKRIST.TTF',
                     color: cubit.isdark ? Colors.white : Colors.purpleAccent,
                   ),
                 ),
               ),
+              // floatingActionButton: FloatingActionButton(
+              //   onPressed: () {
+              //     DioHelper.getcategory(
+              //             url:
+              //                 'https://testsala.000webhostapp.com/api/categories')
+              //         .then((value) {
+              //       print(value.data['categories'][0]['name']);
+              //     }).catchError((error) {
+              //       print(error.toString());
+              //     });
+              //   },
+              //   child: Icon(Icons.add),
+              // ),
               body: cubit.screens[cubit.currentindex],
               bottomNavigationBar: BottomNavigationBar(
                 items: cubit.bottomItems,

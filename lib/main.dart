@@ -1,28 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:untitled/Network/local/cache_Helper.dart';
 import 'package:untitled/Network/remote/DioHelper.dart';
 import 'package:untitled/layout/main_layout/Home_Screen.dart';
 import 'package:untitled/layout/main_layout/basket.dart';
-
 import 'package:untitled/layout/main_layout/cubit/app_cubit.dart';
 import 'package:untitled/layout/main_layout/cubit/app_states.dart';
 import 'package:untitled/modules/login/login_screen.dart';
 
-void main() {
+import 'shared/components/constants/Listview_Loading.dart';
+
+void main() async {
+  // بيتأكد انه كل شي في الميثود خلصت وبعدين يفتح التطبيق
+  WidgetsFlutterBinding.ensureInitialized();
   DioHelper.init();
-  runApp(const MyApp());
+  await CacheHelper.init();
+  // bool isdark = CacheHelper.getData(key: 'isdark') as bool;
+  bool isdark = false;
+  runApp(MyApp(isdark));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool isdark;
+
+  MyApp(
+    this.isdark,
+  );
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => app_cubit(),
+      create: (BuildContext context) => app_cubit()
+        ..changeMode(
+            // fromshared: isdark,
+            ),
       child: BlocConsumer<app_cubit, app_states>(
         listener: (context, state) {},
         builder: (context, state) {
@@ -85,13 +98,10 @@ class MyApp extends StatelessWidget {
               themeMode: app_cubit.get(context).isdark
                   ? ThemeMode.dark
                   : ThemeMode.light,
-              home: home1());
+              home: login_screen());
         },
       ),
     );
   }
-//home_screen
-//Bmi_screen
-//Home
 //login_screen
 }

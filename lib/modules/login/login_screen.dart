@@ -1,8 +1,13 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:untitled/layout/main_layout/Home_Screen.dart';
 import 'package:untitled/layout/main_layout/cubit/app_cubit.dart';
 import 'package:untitled/layout/main_layout/cubit/app_states.dart';
+import 'package:untitled/models/Login/Login_Model.dart';
+import 'package:untitled/models/Login/Login_Model.dart';
 
 import 'package:untitled/modules/Sign_up/Sign_up.dart';
 import 'package:untitled/salad/flutter_app.dart';
@@ -28,7 +33,8 @@ class _login_screenState extends State<login_screen> {
   var form_key = GlobalKey<FormState>(); // uinque id for form/widget
   // any widget can gave it a key
   String emailerror = 'email address msut not be empty';
-
+  final TextEditingController email_controller = TextEditingController();
+  final TextEditingController password_controller = TextEditingController();
   bool ispasswordShow = true;
 
   // @override
@@ -36,22 +42,34 @@ class _login_screenState extends State<login_screen> {
   //   super.initState();
   //   createDatabase();
   // }
+  @override
+  void dispose() {
+    // Clean up the controllers when the widget is disposed
+    email_controller.dispose();
+    password_controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     var cubit = app_cubit.get(context);
+    var message = 'تم تسجيل الدخول بنجاح';
     return BlocProvider(
         create: (BuildContext context) => app_cubit(),
         child: BlocConsumer<app_cubit, app_states>(
             listener: (BuildContext context, app_states state) {
-          if (state is SignInSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text('success'),
-            ));
-          } else if (state is SignInFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(state.errorMessage),
-            ));
+          if (state is LogInSuccess) {
+            print(state.loginModel.message);
+            print(state.loginModel.token);
+            Fluttertoast.showToast(
+              msg: state.loginModel.message,
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 5,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16.0,
+            );
           }
         }, builder: (BuildContext context, app_states state) {
           return Scaffold(
@@ -87,7 +105,7 @@ class _login_screenState extends State<login_screen> {
                         child: Column(
                           children: [
                             Text(
-                              'Sign In ',
+                              'Log In',
                               style: TextStyle(
                                 fontSize: 30.0,
                                 fontWeight: FontWeight.bold,
@@ -151,6 +169,13 @@ class _login_screenState extends State<login_screen> {
                                   return 'password must not be empty';
                                 }
                                 return null;
+                              },
+                              onFieldSubmitted: (value) {
+                                if (form_key.currentState!.validate()) {
+                                  app_cubit.get(context).userLogin(
+                                      email: email_controller.text,
+                                      password: password_controller.text);
+                                }
                               },
                               controller: cubit.password_controller,
                               obscureText: ispasswordShow,
@@ -239,14 +264,44 @@ class _login_screenState extends State<login_screen> {
                                 ? CircularProgressIndicator()
                                 : ElevatedButton(
                                     onPressed: () {
-                                      // context.read<app_cubit>().LogIn();
-
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => home1()));
+                                      if (form_key.currentState!.validate()) {
+                                        cubit.userLogin(
+                                          email: email_controller.text,
+                                          password: password_controller.text,
+                                        );
+                                        Fluttertoast.showToast(
+                                          msg: message,
+                                          toastLength: Toast.LENGTH_LONG,
+                                          gravity: ToastGravity.BOTTOM,
+                                          timeInSecForIosWeb: 5,
+                                          backgroundColor: Colors.white,
+                                          textColor: Colors.purpleAccent,
+                                          fontSize: 16.0,
+                                        );
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => home1()));
+                                        print(message);
+                                      } else {
+                                        print('error');
+                                      }
                                     },
-                                    child: Text('log in '))
+                                    child: Text('log in ')),
+                            // ConditionalBuild er(
+                            //   condition: state is! LogInLoading,
+                            //   builder: (context) => ElevatedButton(
+                            //       onPressed: () {
+                            //         // context.read<app_cubit>().LogIn();
+                            //
+                            //         Navigator.push(
+                            //             context,
+                            //             MaterialPageRoute(
+                            //                 builder: (context) => home1()));
+                            //       },
+                            //       child: Text('log in ')),
+                            //   fallback: (context) =>
+                            //       Center(child: CircularProgressIndicator()),
                           ],
                         ),
                       ),
