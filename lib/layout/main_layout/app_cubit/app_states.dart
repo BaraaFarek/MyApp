@@ -1,67 +1,69 @@
-import 'package:untitled/models/Login/Login_Model.dart';
+import 'package:untitled/models/DeliveryComapanies.dart';
+import 'package:untitled/models/Products_Model.dart';
+
+import '../../../models/CategoriesModel.dart';
+import '../../../models/StoresModel.dart';
 
 abstract class app_states {}
 
 class initial_app_states extends app_states {}
 
-class app_changebottomnav_states extends app_states {}
-
 class app_changeMode_states extends app_states {}
 
-class NewsBussinesSuccessState extends app_states {
-  var news;
-  NewsBussinesSuccessState(this.news);
+class changebottoNav_States extends app_states {}
+
+///////////////////////////////////////////////////////////////////
+class SuccessProductsState extends app_states {
+  final List<ProductsModel> products;
+  SuccessProductsState(this.products);
 }
 
-class NewsBussinesErrorState extends app_states {
+class errorProductsState extends app_states {
   final String error;
-  NewsBussinesErrorState(this.error);
+  errorProductsState(this.error);
 }
 
-class NewsLoadingState extends app_states {}
+class loadingProductsState extends app_states {}
 
-/////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+class successCategoriessState extends app_states {
+  final List<CategoriesModel> categories;
 
-class LogInSuccess extends app_states {
-  final LoginModel loginModel;
-
-  LogInSuccess(
-    this.loginModel,
-  );
+  successCategoriessState(this.categories);
 }
 
-class LogInInitial extends app_states {}
-
-class SignInLoading extends app_states {}
-
-class LogInFailure extends app_states {
-  final String errorMessage;
-  LogInFailure({required this.errorMessage});
-}
-
-//////////////////////////////////////////////////////////////////////
-
-class SignInSuccess extends app_states {}
-
-class SignInInitial extends app_states {}
-
-class LogInLoading extends app_states {}
-
-class SignInFailure extends app_states {
-  final String errorMessage;
-  SignInFailure({required this.errorMessage});
-}
-
-//////////////////////////////////////////////////////////////////////
-
-class initial_Categories extends app_states {}
-
-class CategoriesLoadingState extends app_states {}
-
-class CategoriesErrorState extends app_states {
+class errorCategoriesState extends app_states {
   final String error;
 
-  CategoriesErrorState(this.error);
+  errorCategoriesState(this.error);
 }
 
-class CategoriesSuccessState extends app_states {}
+class loadingCategoriesState extends app_states {}
+
+/////////////////////////////////////////////////////////////////
+class successDeliveryCompaniesState extends app_states {
+  final List<Deliverycomapanies> delivery;
+  successDeliveryCompaniesState(this.delivery);
+}
+
+class errorsDeliveryCompaniesState extends app_states {
+  final String error;
+  errorsDeliveryCompaniesState(this.error);
+}
+
+class loadingDeliveryCompaniesState extends app_states {}
+
+/////////////////////////////////////////////////////////////
+class successStoresByCategoryState extends app_states {
+  final List<StoresByCategories> stores;
+
+  successStoresByCategoryState(this.stores);
+}
+
+class errorStoresByCategoryState extends app_states {
+  final String error;
+
+  errorStoresByCategoryState(this.error);
+}
+
+class loadingStoresByCategoryState extends app_states {}

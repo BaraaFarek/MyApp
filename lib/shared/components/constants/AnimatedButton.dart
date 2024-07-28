@@ -30,7 +30,7 @@ class _AnimatedButton_screenState extends State<AnimatedButton_screen>
   @override
   void dispose() {
     super.dispose();
-    arrowAnimationController?.dispose();
+    arrowAnimationController.dispose();
   }
 
   @override

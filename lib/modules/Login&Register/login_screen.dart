@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:untitled/Network/local/cache_Helper.dart';
-import 'package:untitled/modules/login/Login_cubit/login_cubit.dart';
-import 'package:untitled/modules/login/Login_cubit/login_states.dart';
 
 import '../../layout/main_layout/Home_Screen.dart';
+import 'Login_cubit/login_cubit.dart';
+import 'Login_cubit/login_states.dart';
 
 class Login_screen extends StatefulWidget {
   const Login_screen({super.key});
@@ -40,6 +40,7 @@ class _login_screenState extends State<Login_screen> {
               timeInSecForIosWeb: 1,
             );
             CacheHelper.setData(key: 'token', value: state.loginModel.token);
+            CacheHelper.setData(key: 'name', value: state.loginModel.user.name);
             if (state.loginModel.message == 'تم تسجيل الدخول') {
               Navigator.pushReplacement(
                 context,
@@ -98,7 +99,7 @@ class _login_screenState extends State<Login_screen> {
                           child: Column(
                             children: [
                               Text(
-                                'تسجيل دخول',
+                                'Login',
                                 style: TextStyle(
                                   fontSize: 30.0,
                                   fontWeight: FontWeight.bold,
@@ -116,7 +117,7 @@ class _login_screenState extends State<Login_screen> {
                                   controller: loginCubit.email_controller,
                                   validator: (value) {
                                     if (value!.isEmpty) {
-                                      return 'البريد الإلكتروني لا يجب أن يكون فارغاً';
+                                      return 'email must not be empty';
                                     }
                                     return null;
                                   },
@@ -125,14 +126,14 @@ class _login_screenState extends State<Login_screen> {
                                     filled: true,
                                     fillColor: Colors.grey.shade50,
                                     label: Text(
-                                      'البريد الإلكتروني',
+                                      'Email',
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w400,
                                         color: Colors.black.withOpacity(0.5),
                                       ),
                                     ),
-                                    hintText: 'ادخل بريدك الإلكتروني',
+                                    hintText: 'enter your email',
                                     hintStyle: TextStyle(
                                       fontSize: 12.0,
                                       fontWeight: FontWeight.w400,
@@ -173,7 +174,7 @@ class _login_screenState extends State<Login_screen> {
                                   textAlign: TextAlign.right,
                                   validator: (value) {
                                     if (value!.isEmpty) {
-                                      return 'كلمة المرور لا يجب أن تكون فارغة';
+                                      return 'password must not be empty';
                                     }
                                     return null;
                                   },
@@ -184,14 +185,14 @@ class _login_screenState extends State<Login_screen> {
                                       filled: true,
                                       fillColor: Colors.grey.shade50,
                                       label: Text(
-                                        'كلمة المرور',
+                                        'Password',
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w400,
                                           color: Colors.black.withOpacity(0.5),
                                         ),
                                       ),
-                                      hintText: 'ادخل كلمة المرور',
+                                      hintText: 'enter your password',
                                       hintStyle: TextStyle(
                                         fontSize: 12.0,
                                         fontWeight: FontWeight.w400,
@@ -240,7 +241,7 @@ class _login_screenState extends State<Login_screen> {
                                   TextButton(
                                     onPressed: () {},
                                     child: Text(
-                                      'إنشاء حساب جديد',
+                                      'Register',
                                       style: TextStyle(
                                         color: Colors.purple,
                                       ),
@@ -259,7 +260,7 @@ class _login_screenState extends State<Login_screen> {
                                               minimumSize: MaterialStateProperty
                                                   .resolveWith((states) =>
                                                       Size(160, 40))),
-                                          child: Text('تسجيل دخول'))
+                                          child: Text('login'))
                                       : Center(
                                           child: CircularProgressIndicator()),
                                 ],

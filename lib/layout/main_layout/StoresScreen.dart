@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
 
+import '../../models/DeliveryComapanies.dart';
 import 'app_cubit/app_cubit.dart';
 import 'app_cubit/app_states.dart';
 
-class Delivery_screen extends StatelessWidget {
-  Delivery_screen({super.key});
+class Storesscreen extends StatelessWidget {
+  Storesscreen({super.key});
+  Deliverycomapanies? deliverycomapanies;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,7 @@ class Delivery_screen extends StatelessWidget {
                             Center(child: CircularProgressIndicator()),
                           if (state is successDeliveryCompaniesState)
                             Container(
-                              height: 200, // ضبط ارتفاع مناسب
+                              height: 400, // ضبط ارتفاع مناسب
                               child: ListView.builder(
                                 itemCount: state.delivery.length,
                                 itemBuilder: (context, index) {
@@ -66,43 +68,11 @@ class Delivery_screen extends StatelessWidget {
                                                     Icon(Icons.delivery_dining),
                                                   ],
                                                 ),
-                                                SizedBox(
-                                                  height: 4.0,
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: [
-                                                    Icon(
-                                                      Icons.phone,
-                                                      color:
-                                                          Colors.purpleAccent,
-                                                      size: 16,
-                                                    ),
-                                                    Text(
-                                                      '  ${item.phone}',
-                                                      style: TextStyle(
-                                                          fontSize: 14),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: [
-                                                    Icon(
-                                                      Icons
-                                                          .description_outlined,
-                                                      color:
-                                                          Colors.purpleAccent,
-                                                      size: 16,
-                                                    ),
-                                                    Text(
-                                                      '   ${item.description}',
-                                                      style: TextStyle(
-                                                          fontSize: 14),
-                                                    ),
-                                                  ],
+                                                SizedBox(height: 4),
+                                                Text(
+                                                  '${item.phone}\nDescription: ${item.description}',
+                                                  style:
+                                                      TextStyle(fontSize: 14),
                                                 ),
                                               ],
                                             ),

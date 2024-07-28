@@ -1,103 +1,187 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:untitled/layout/main_layout/cubit/app_cubit.dart';
-import 'package:untitled/layout/main_layout/cubit/app_states.dart';
-import 'package:untitled/shared/components/constants/component.dart';
+import 'package:hexcolor/hexcolor.dart';
+import 'package:untitled/layout/main_layout/app_cubit/app_states.dart';
+import 'package:untitled/models/CategoriesModel.dart';
 
-class Categories_screen extends StatelessWidget {
-  Categories_screen({super.key});
+import 'StoresByCategory.dart';
+import 'app_cubit/app_cubit.dart';
+// Assuming you have a HexColor utility for color conversion
 
-  List<String> title = ['fashion', 'halls', 'cards', 'sallon', 'hello'];
+class CategoriesScreen extends StatelessWidget {
+  CategoriesScreen({super.key});
 
-// without Scaffold because home screen has a Scaffold
+  CategoriesModel? categoriesModel;
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (BuildContext context) => app_cubit(),
-        child: BlocConsumer<app_cubit, app_states>(
-            listener: (BuildContext context, app_states state) {},
-            builder: (BuildContext context, app_states state) {
-              return Scaffold(
-                backgroundColor: Colors.white,
-                body:ListView.builder(
-                  itemCount: itemCount,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Card( // استخدام Card لعرض كل صورة مع عنوانها
+      create: (BuildContext context) => app_cubit()..fetchCategories(),
+      // ..getProducts(),
+      child: BlocConsumer<app_cubit, app_states>(
+        listener: (BuildContext context, app_states state) {},
+        builder: (BuildContext context, app_states state) {
+          final appCubit = context.read<app_cubit>();
+          return Scaffold(
+            backgroundColor:
+                appCubit.isdark ? HexColor("17212B") : Colors.white,
+            body: Directionality(
+              textDirection: TextDirection.rtl,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
                       child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Image.network(
-                            images[index], // ضع عنوان الصورة هنا
-                            fit: BoxFit.cover, // ضبط تناسب الصورة
-                          ),
-                          Padding(
-                            padding: EdgeInsets.all(8), // تباعد حول النص
-                            child: Text(
-                              titles[index], // ضع العنوان هنا
-                              style: TextStyle(fontSize: 16), // تغيير حجم الخط
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 20),
+                          if (state is loadingCategoriesState)
+                            Center(child: CircularProgressIndicator()),
+                          if (state is successCategoriessState)
+                            Container(
+                              height: 500, // ضبط ارتفاع مناسب
+                              child: GridView.builder(
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3, // تغيير عدد الأعمدة إلى 3
+                                  mainAxisSpacing: 10,
+                                  crossAxisSpacing: 10,
+                                  childAspectRatio: 3 / 4,
+                                ),
+                                itemCount: state.categories.length,
+                                itemBuilder: (context, index) {
+                                  final salat = state.categories[index];
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        Expanded(
+                                            child: GestureDetector(
+                                                onTap: () {
+                                                  appCubit
+                                                      .fetchStoresByCategory(
+                                                          salat.id);
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              StoresByCategory(
+                                                                  categoryId:
+                                                                      salat
+                                                                          .id)));
+                                                },
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                        color: Colors.grey),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                  child: Column(
+                                                    children: [
+                                                      Expanded(
+                                                        child: ClipRRect(
+                                                          // borderRadius:
+                                                          //     BorderRadius.vertical(
+                                                          //         top: Radius
+                                                          //             .circular(
+                                                          //                 0)),
+                                                          child: Image.network(
+                                                            salat.image,
+                                                            width:
+                                                                double.infinity,
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ))),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            salat.name,
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            textAlign: TextAlign.left,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
-                          ),
+                          if (state is errorCategoriesState)
+                            Center(child: Text(state.error)),
                         ],
                       ),
-                    );
-                  },
+                    ),
+                  ],
                 ),
-              );
-              );
-            }));
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
 }
-// GestureDetector(
-//                     child: Column(
-//                   children: [
-//                     SizedBox(
-//                       height: 500,
-//                       child: ListView.builder(
-//                         physics: BouncingScrollPhysics(),
-//                         itemCount: 5,
-//                         itemBuilder: (context, index) => Container(
-//                           height: 120,
-//                           margin: EdgeInsets.all(20),
-//                           decoration: BoxDecoration(
-//                             borderRadius: BorderRadius.circular(20),
-//                           ),
-//                           child: Stack(
-//                             alignment: Alignment.center,
-//                             children: [
-//                               Container(
-//                                 width: 220,
-//                                 height: 120,
-//                                 decoration: BoxDecoration(
-//                                     borderRadius: BorderRadius.circular(20),
-//                                     image: DecorationImage(
-//                                       fit: BoxFit.cover,
-//                                       image:
-//                                           AssetImage('assets/images/photo.png'),
-//                                     )),
-//                               ),
-//                               Container(
-//                                 width: 220.0,
-//                                 height: 120,
-//                                 decoration: BoxDecoration(
-//                                   borderRadius: BorderRadius.circular(20),
-//                                   color: Colors.white.withOpacity(0.1),
-//                                 ),
-//                                 child: Center(
-//                                   child: Text(
-//                                     title[index],
-//                                     style: TextStyle(
-//                                       fontWeight: FontWeight.bold,
-//                                       fontSize: 20,
-//                                       color: Colors.grey.shade100,
-//                                     ),
+
+//  Container(
+//                             width: double.infinity,
+//                             height: 38,
+//                             decoration: BoxDecoration(
+//                               color: Colors.white,
+//                               borderRadius: BorderRadius.circular(25.0),
+//                             ),
+//                             child: TextFormField(
+//                               keyboardType: TextInputType.text,
+//                               decoration: InputDecoration(
+//                                 filled: true,
+//                                 fillColor: appCubit.isdark
+//                                     ? Colors.grey.withOpacity(0.9)
+//                                     : Colors.white,
+//                                 border: InputBorder.none,
+//                                 label: Text(
+//                                   'بحث',
+//                                   style: TextStyle(
+//                                     fontSize: 20,
+//                                     fontWeight: FontWeight.w400,
+//                                     color: Colors.black.withOpacity(0.5),
 //                                   ),
 //                                 ),
-//                               )
-//                             ],
+//                                 focusedBorder: OutlineInputBorder(
+//                                   borderRadius: BorderRadius.circular(25),
+//                                   borderSide: BorderSide(
+//                                     width: 0.9,
+//                                     color: Colors.purple,
+//                                   ),
+//                                 ),
+//                                 enabledBorder: OutlineInputBorder(
+//                                   borderRadius: BorderRadius.circular(25),
+//                                   borderSide: BorderSide(
+//                                     width: 0.01,
+//                                     color: Colors.purple,
+//                                   ),
+//                                 ),
+//                                 errorBorder: OutlineInputBorder(
+//                                   borderRadius: BorderRadius.circular(25),
+//                                   borderSide: BorderSide(
+//                                     width: 0.9,
+//                                     color: Colors.redAccent,
+//                                   ),
+//                                 ),
+//                                 prefixIcon: Icon(Icons.search_rounded),
+//                               ),
+//                             ),
 //                           ),
-//                         ),
-//                       ),
-//                     ),
-//                   ],
-//                 )),

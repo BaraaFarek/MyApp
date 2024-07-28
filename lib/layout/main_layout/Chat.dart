@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class Messenger_screen extends StatefulWidget {
-  Messenger_screen({super.key});
+class Chat_screen extends StatefulWidget {
+  Chat_screen({super.key});
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<Messenger_screen> {
+class _ChatScreenState extends State<Chat_screen> {
   List<String> messages = [];
 
   TextEditingController messageController = TextEditingController();

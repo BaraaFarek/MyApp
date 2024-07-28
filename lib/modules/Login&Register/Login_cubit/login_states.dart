@@ -1,4 +1,4 @@
-import '../../../models/LoginModel/LoginModel.dart';
+import '../../../models/LoginModel.dart';
 
 abstract class login_states {}
 

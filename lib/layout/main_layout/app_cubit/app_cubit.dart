@@ -1,163 +1,123 @@
+import 'dart:async';
 import 'dart:convert';
-
-import 'package:dio/dio.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:untitled/Network/endpoints.dart';
-import 'package:untitled/Network/local/cache_Helper.dart';
-import 'package:untitled/Network/remote/DioHelper.dart';
-import 'package:untitled/layout/main_layout/basket.dart';
-import 'package:http/http.dart' as http;
-import 'package:untitled/layout/main_layout/messenger1.dart';
-import 'package:untitled/layout/main_layout/cubit/app_states.dart';
 import 'package:flutter/material.dart';
-import 'package:untitled/layout/main_layout/delivery_screen.dart';
-import 'package:untitled/layout/main_layout/categories.dart';
-import 'package:untitled/models/Login/Login_Model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:untitled/Network/local/cache_Helper.dart';
+import 'package:untitled/layout/main_layout/Categories.dart';
+import 'package:untitled/layout/main_layout/Delivery.dart';
+import 'package:untitled/layout/main_layout/app_cubit/app_states.dart';
+import 'package:untitled/layout/main_layout/shoppingCart.dart';
+import 'package:untitled/models/DeliveryComapanies.dart';
+import '../../../Network/remote/DioHelper.dart';
+import '../../../models/CategoriesModel.dart';
+import '../../../models/StoresModel.dart';
 
 class app_cubit extends Cubit<app_states> {
   app_cubit() : super(initial_app_states());
 
   static app_cubit get(context) => BlocProvider.of(context);
+
+  Future<void> fetchCategories() async {
+    emit(loadingCategoriesState());
+    try {
+      final response = await DioHelper.getData('api/category');
+      print(response?.data); // قم بإضافة هذا السطر للتحقق من البيانات المستلمة
+      if (response?.statusCode == 200) {
+        List<CategoriesModel> salats = (response?.data as List)
+            .map((salat) => CategoriesModel.fromJson(salat))
+            .toList();
+        emit(successCategoriessState(salats));
+      } else if (response?.statusCode == 401) {
+        emit(errorCategoriesState('Unauthorized'));
+      } else {
+        emit(errorCategoriesState('Something went wrong'));
+      }
+    } catch (e) {
+      emit(errorCategoriesState(e.toString()));
+    }
+  }
+
+  Future<void> fetchStoresByCategory(int categoryId) async {
+    try {
+      emit(loadingStoresByCategoryState());
+      final response = await DioHelper.getData(
+          'api/StoresByCategory/$categoryId'); // افتراض أنك تمرر رابط API هنا
+      final List<dynamic> responseData =
+          jsonDecode(response?.data); // فك ترميز JSON
+      final List<StoresByCategories> stores = responseData
+          .map((json) => StoresByCategories.fromJson(json))
+          .toList();
+      emit(successStoresByCategoryState(stores));
+    } catch (e) {
+      emit(errorStoresByCategoryState(e.toString()));
+    }
+  }
+
+  Future<void> fetchDeliveryCompanies() async {
+    emit(loadingDeliveryCompaniesState());
+    try {
+      final response = await DioHelper.getData('api/deliveryCompanies');
+      print(response?.data); // قم بإضافة هذا السطر للتحقق من البيانات المستلمة
+      if (response?.statusCode == 200) {
+        List<Deliverycomapanies> salats = (response?.data as List)
+            .map((salat) => Deliverycomapanies.fromJson(salat))
+            .toList();
+        emit(successDeliveryCompaniesState(salats));
+      } else if (response?.statusCode == 401) {
+        emit(errorsDeliveryCompaniesState('Unauthorized'));
+      } else {
+        emit(errorsDeliveryCompaniesState('Something went wrong'));
+      }
+    } catch (e) {
+      emit(errorsDeliveryCompaniesState(e.toString()));
+    }
+  }
+
+  late bool isdark = false;
+
   int currentindex = 0;
-  bool isdark = true;
-  TextEditingController email_controller = TextEditingController();
-  TextEditingController password_controller = TextEditingController();
-  ThemeMode appMode = ThemeMode.dark;
+  List<Widget> screens = [
+    CategoriesScreen(),
+    shoppingCart_screen(),
+    Delivery_screen(),
+  ];
   List<BottomNavigationBarItem> bottomItems = [
     BottomNavigationBarItem(
-        icon: Icon(Icons.category_outlined), label: 'Categories'),
+        icon: Icon(
+          Icons.home_outlined,
+          size: 20,
+        ),
+        label: 'الرئيسية'),
     BottomNavigationBarItem(
-        icon: Icon(Icons.messenger_outline), label: 'messeges'),
-    BottomNavigationBarItem(
-        icon: Icon(Icons.shopping_bag_outlined), label: 'basket'),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.delivery_dining_outlined),
-      label: 'delivery ',
+      icon: Icon(
+        FontAwesomeIcons.cartShopping,
+        size: 20,
+      ),
+      label: 'السلة',
     ),
+    BottomNavigationBarItem(
+        icon: Icon(
+          FontAwesomeIcons.shippingFast,
+          size: 20,
+        ),
+        label: 'توصيل'),
   ];
-  late LoginModel loginModel;
-  List<Widget> screens = [
-    Categories_screen(),
-    Messenger_screen(),
-    basket_screen(),
-    delivery_screen(),
-  ];
-  List<String> titles = [
-    'Categories',
-    'Messages',
-    'basket',
-    'delivery',
-  ];
-  List<dynamic> category = [];
-
-  void getCategory() {
-    emit(CategoriesLoadingState());
-    DioHelper.getcategory(
-            url: 'https://testsala.000webhostapp.com/api/categories')
-        .then((value) {
-      category = value.data['articles'];
-      print(category[0]['title']);
-      emit(CategoriesSuccessState());
-    }).catchError((error) {
-      print(error.toString());
-      emit(CategoriesErrorState(error.toString()));
-    });
-  }
-
-  void userLogin({
-    required String email,
-    required String password,
-  }) {
-    emit(LogInLoading());
-    DioHelper.postData(url: LoginPath, data: {
-      'email': email,
-      'password': password,
-    }).then((value) {
-      print(value.data);
-      loginModel = LoginModel.fromJson(value.data);
-      print(loginModel.message);
-      emit(LogInSuccess(loginModel));
-    }).catchError((error) {
-      emit(LogInFailure(errorMessage: error.toString()));
-    });
-  }
 
   void changeIndex(int index) {
     currentindex = index;
-    emit(app_changebottomnav_states());
+    emit(changebottoNav_States());
   }
 
-  void changeMode(bool fromshared) {
-    if (fromshared != null) {
+  Future<void> changeMode({bool? isDrakFromShared}) async {
+    if (isDrakFromShared != null) {
+      isdark = isDrakFromShared;
       emit(app_changeMode_states());
-      isdark = fromshared;
     } else {
       isdark = !isdark;
-    }
-    CacheHelper.setData(key: 'isdark', value: isdark).then((value) {
-      emit(app_changeMode_states());
-    });
-  }
-
-  Future<http.Response> getData(String url) async {
-    var response = await http.get(Uri.parse(url));
-    if (response.statusCode == 200) {
-      return response;
-    } else {
-      throw Exception('Failed to load data');
+      CacheHelper.setData(key: 'isdark', value: isdark).then((value) {
+        emit(app_changeMode_states());
+      });
     }
   }
-
-  // Future<http.Response> createData(String url, Map<String, String> body) async {
-  //   var response = await http.post(Uri.parse(url),
-  //       headers: <String, String>{
-  //         'Content_type': 'applicatio/json; charset=UTF-8',
-  //       },
-  //       body: jsonEncode(body));
-  //   if (response.statusCode == 200) {
-  //     return response;
-  //   } else {
-  //     throw Exception('Failed to create data');
-  //   }
-  // }
-  //
-  // Future<http.Response> updateData(String url, Map<String, String> body) async {
-  //   var response = await http.put(
-  //     Uri.parse(url),
-  //     headers: <String, String>{
-  //       'Content_type': 'applicatio/json; charset=UTF-8'
-  //     },
-  //     body: jsonEncode(body),
-  //   );
-  //   if (response.statusCode == 200) {
-  //     return response;
-  //   } else {
-  //     throw Exception('Failed to update data');
-  //   }
-  // }
-  //
-  // Future<http.Response> DeleteData(String url) async {
-  //   var response = await http.delete(
-  //     Uri.parse(url),
-  //     headers: <String, String>{
-  //       'Content_type': 'applicatio/json; charset=UTF-8'
-  //     },
-  //   );
-  //   if (response.statusCode == 200) {
-  //     return response;
-  //   } else {
-  //     throw Exception('Failed to delete data');
-  //   }
-  // }
 }
-
-// what contain the response:
-// 1.headers
-// 2.body that contain data
-//3.statuscode = 200,400,403
-// if (resons.statuscode == 200){
-// Navigator.pushNamed(context,'\home'); }
-// else {
-// print('network error');
-// print (response.body);}
