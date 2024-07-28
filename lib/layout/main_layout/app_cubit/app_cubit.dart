@@ -41,12 +41,12 @@ class app_cubit extends Cubit<app_states> {
   Future<void> fetchStoresByCategory(int categoryId) async {
     try {
       emit(loadingStoresByCategoryState());
-      final response = await DioHelper.getData(
-          'api/StoresByCategory/$categoryId'); // افتراض أنك تمرر رابط API هنا
-      final List<dynamic> responseData =
-          jsonDecode(response?.data); // فك ترميز JSON
+      final response =
+          await DioHelper.getData('api/StoresByCategory/$categoryId');
+      final List<dynamic> responseData = response?.data;
       final List<StoresByCategories> stores = responseData
-          .map((json) => StoresByCategories.fromJson(json))
+          .map((json) =>
+              StoresByCategories.fromJson(json as Map<String, dynamic>))
           .toList();
       emit(successStoresByCategoryState(stores));
     } catch (e) {

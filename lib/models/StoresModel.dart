@@ -9,11 +9,11 @@ class StoresByCategories {
   String imageStore;
   int sellerId;
   int productId;
-  int externalServiceId;
+  int? externalServiceId; // التعامل مع null
   int categoryId;
   String type;
-  DateTime? createdAt;
-  DateTime? updatedAt;
+  DateTime createdAt;
+  DateTime updatedAt;
   DateTime? deletedAt;
 
   StoresByCategories({
@@ -27,13 +27,14 @@ class StoresByCategories {
     required this.imageStore,
     required this.sellerId,
     required this.productId,
-    required this.externalServiceId,
+    this.externalServiceId,
     required this.categoryId,
     required this.type,
     required this.createdAt,
     required this.updatedAt,
-    required this.deletedAt,
+    this.deletedAt,
   });
+
   factory StoresByCategories.fromJson(Map<String, dynamic> json) {
     return StoresByCategories(
       id: json['id'],
@@ -51,7 +52,9 @@ class StoresByCategories {
       type: json['type'],
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
-      deletedAt: DateTime.parse(json['deletedAt']),
+      deletedAt: json['deleted_at'] != null
+          ? DateTime.parse(json['deleted_at'])
+          : null,
     );
   }
 }
