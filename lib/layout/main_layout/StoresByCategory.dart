@@ -1,20 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import 'app_cubit/app_cubit.dart';
 import 'app_cubit/app_states.dart';
 
-class StoresByCategory extends StatelessWidget {
+class StoresByCategory extends StatefulWidget {
   final int categoryId;
 
   StoresByCategory({required this.categoryId});
 
   @override
+  State<StoresByCategory> createState() => _StoresByCategoryState();
+}
+
+class _StoresByCategoryState extends State<StoresByCategory> {
+  List<Icon> ratingStars = [];
+  String? rating;
+
+  @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => app_cubit()..fetchStoresByCategory(categoryId),
+      create: (context) =>
+          app_cubit()..fetchStoresByCategory(widget.categoryId),
       child: BlocConsumer<app_cubit, app_states>(
         listener: (context, state) {},
         builder: (context, state) {
@@ -23,6 +34,7 @@ class StoresByCategory extends StatelessWidget {
             appBar: AppBar(
               backgroundColor:
                   appCubit.isdark ? HexColor("17212B") : Colors.white,
+              automaticallyImplyLeading: false,
               elevation: 0.0,
               actions: [
                 IconButton(
@@ -48,7 +60,7 @@ class StoresByCategory extends StatelessWidget {
                 ),
               ],
               title: Text(
-                ' Ballon',
+                'Ballon',
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 30.0,
@@ -60,7 +72,7 @@ class StoresByCategory extends StatelessWidget {
             backgroundColor:
                 appCubit.isdark ? HexColor("17212B") : Colors.white,
             body: Directionality(
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirection.ltr,
               child: SingleChildScrollView(
                 child: Column(
                   children: [
@@ -69,9 +81,13 @@ class StoresByCategory extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: 20),
                           if (state is loadingStoresByCategoryState)
-                            Center(child: CircularProgressIndicator()),
+                            Center(
+                              child: SpinKitThreeBounce(
+                                color: Colors.purpleAccent,
+                                size: 20.0,
+                              ),
+                            ),
                           if (state is successStoresByCategoryState)
                             ListView.builder(
                               shrinkWrap: true,
@@ -79,13 +95,16 @@ class StoresByCategory extends StatelessWidget {
                               itemCount: state.stores.length,
                               itemBuilder: (context, index) {
                                 final store = state.stores[index];
+                                double ratingValue =
+                                    double.tryParse(store.rating) ?? 0.0;
                                 return Container(
-                                  margin: EdgeInsets.symmetric(vertical: 10),
+                                  height: 120,
+                                  margin: EdgeInsets.symmetric(vertical: 5),
                                   decoration: BoxDecoration(
                                     border: Border.all(color: Colors.grey),
-                                    borderRadius: BorderRadius.circular(10),
+                                    borderRadius: BorderRadius.circular(5),
                                   ),
-                                  child: Column(
+                                  child: Row(
                                     children: [
                                       GestureDetector(
                                         onTap: () {
@@ -100,74 +119,148 @@ class StoresByCategory extends StatelessWidget {
                                           );
                                         },
                                         child: Container(
+                                          width: 100,
+                                          height: 150,
                                           decoration: BoxDecoration(
-                                            border:
-                                                Border.all(color: Colors.grey),
                                             borderRadius:
-                                                BorderRadius.circular(10),
+                                                BorderRadius.circular(20),
                                           ),
                                           child: ClipRRect(
-                                            borderRadius: BorderRadius.vertical(
-                                              top: Radius.circular(10),
+                                            borderRadius:
+                                                BorderRadius.horizontal(
+                                              left: Radius.circular(10),
                                             ),
                                             child: Image.network(
                                               store.imageStore,
                                               width: double.infinity,
-                                              height: 150,
+                                              height: 100,
                                               fit: BoxFit.cover,
                                             ),
                                           ),
                                         ),
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          store.name,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 5.0, left: 5.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 4.0),
+                                                child: Text(
+                                                  store.name,
+                                                  style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                  textAlign: TextAlign.left,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 1,
+                                                ),
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.location_on_outlined,
+                                                    size: 18,
+                                                  ),
+                                                  Expanded(
+                                                    child: Text(
+                                                      store.address,
+                                                      style: TextStyle(
+                                                        fontSize: 12,
+                                                      ),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      maxLines: 1,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.phone,
+                                                    size: 18,
+                                                  ),
+                                                  GestureDetector(
+                                                      onTap: () {
+                                                        launch(
+                                                            "${store.phone}");
+                                                      },
+                                                      child: Text(
+                                                          ' ${store.phone}')),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: List.generate(
+                                                  5,
+                                                  (index) {
+                                                    if (index <
+                                                        ratingValue.floor()) {
+                                                      return Icon(
+                                                        Icons.star,
+                                                        size: 12,
+                                                        color: Colors.amber,
+                                                      );
+                                                    } else if (index <
+                                                        ratingValue) {
+                                                      return Icon(
+                                                        Icons.star_half,
+                                                        size: 12,
+                                                        color: Colors.amber,
+                                                      );
+                                                    } else {
+                                                      return Icon(
+                                                        Icons.star_border,
+                                                        size: 12,
+                                                        color: Colors.amber,
+                                                      );
+                                                    }
+                                                  },
+                                                ).toList(),
+                                              ),
+                                              Row(
+                                                children: [
+                                                  IconButton(
+                                                    onPressed: () {
+                                                      launch(
+                                                          "${store.facebookLink}");
+                                                    },
+                                                    icon: Icon(
+                                                      Icons.facebook_outlined,
+                                                      color: HexColor("1976D2"),
+                                                      size: 20,
+                                                    ),
+                                                    padding: EdgeInsets.zero,
+                                                    constraints:
+                                                        BoxConstraints(),
+                                                  ),
+                                                  IconButton(
+                                                    onPressed: () {
+                                                      launch(
+                                                          "${store.instagramLink}");
+                                                    },
+                                                    icon: FaIcon(
+                                                      FontAwesomeIcons
+                                                          .instagram,
+                                                      color: Colors.pink,
+                                                      size: 20,
+                                                    ),
+                                                    padding: EdgeInsets.zero,
+                                                    constraints:
+                                                        BoxConstraints(),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
                                           ),
-                                          textAlign: TextAlign.left,
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
                                         ),
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(store.address),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text('Phone: ${store.phone}'),
-                                      ),
-                                      Row(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child:
-                                                Text('Rating: ${store.rating}'),
-                                          ),
-                                          // if (store.rating == 1)
-                                          //   Icon(Icons.star),
-                                          // if (store.rating == 2)
-                                          //   Row(children[
-                                          //   Icon(Icons.star),
-                                          //       Icon(Icons.star),
-                                          //       ])
-                                          // if (store.rating == 3)
-                                          //   Row(
-                                          //       children[
-                                          //       Icon(Icons.star),
-                                          //       Icon(Icons.star),
-                                          //       Icon(Icons.star),
-                                          //       ])
-                                          //
-                                          // if (store.rating == 2)
-                                          //   Icon(Icons.star),
-                                          // if (store.rating == 2)
-                                          //   Icon(Icons.star),
-                                        ],
-                                      )
                                     ],
                                   ),
                                 );

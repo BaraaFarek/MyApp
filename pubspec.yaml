@@ -50,6 +50,9 @@ dependencies:
   flutter_screenutil: ^5.9.3
   conditional_builder_null_safety: ^0.0.6
   carousel_slider: ^4.2.1
+  flutter_rating_bar: ^4.0.1
+  flutter_spinkit: ^5.2.1
+  url_launcher: ^6.3.0
 
 
 
@@ -102,6 +105,10 @@ flutter:
      - family: ITCKRIST.TTF
        fonts:
          - asset: assets/fonts/ITCKRIST.TTF
+     - family: Comic Sans MS
+       fonts:
+         - asset: assets/fonts/comici.ttf
+
 
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

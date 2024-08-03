@@ -1,0 +1,12 @@
+class LogoutModel {
+  String message;
+
+  LogoutModel({
+    required this.message,
+  });
+  factory LogoutModel.fromJson(Map<String, dynamic> json) {
+    return LogoutModel(
+      message: json['message'] as String,
+    );
+  }
+}

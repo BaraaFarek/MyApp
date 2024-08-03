@@ -1,4 +1,4 @@
-class StoresByCategories {
+class StoresModel {
   int id;
   String name;
   String address;
@@ -9,14 +9,14 @@ class StoresByCategories {
   String imageStore;
   int sellerId;
   int productId;
-  int? externalServiceId; // التعامل مع null
+  int externalServiceId;
   int categoryId;
   String type;
   DateTime createdAt;
   DateTime updatedAt;
   DateTime? deletedAt;
 
-  StoresByCategories({
+  StoresModel({
     required this.id,
     required this.name,
     required this.address,
@@ -27,7 +27,7 @@ class StoresByCategories {
     required this.imageStore,
     required this.sellerId,
     required this.productId,
-    this.externalServiceId,
+    required this.externalServiceId,
     required this.categoryId,
     required this.type,
     required this.createdAt,
@@ -35,26 +35,27 @@ class StoresByCategories {
     this.deletedAt,
   });
 
-  factory StoresByCategories.fromJson(Map<String, dynamic> json) {
-    return StoresByCategories(
-      id: json['id'],
-      name: json['name'],
-      address: json['address'],
-      phone: json['phone'],
-      facebookLink: json['facebook_link'],
-      instagramLink: json['instagram_link'],
-      rating: json['rating'],
-      imageStore: json['image_store'],
-      sellerId: json['seller_id'],
-      productId: json['product_id'],
-      externalServiceId: json['external_service_id'],
-      categoryId: json['category_id'],
-      type: json['type'],
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
-      deletedAt: json['deleted_at'] != null
-          ? DateTime.parse(json['deleted_at'])
-          : null,
+  factory StoresModel.fromJson(Map<String, dynamic> json) {
+    return StoresModel(
+      id: json['id'] ?? 0,
+      name: json['name'] ?? '',
+      address: json['address'] ?? '',
+      phone: json['phone'] ?? 0,
+      facebookLink: json['facebookLink'] ?? '',
+      instagramLink: json['instagramLink'] ?? '',
+      rating: json['rating'] ?? '',
+      imageStore: json['imageStore'] ?? '',
+      sellerId: json['sellerId'] ?? 0,
+      productId: json['productId'] ?? 0,
+      externalServiceId: json['externalServiceId'] ?? 0,
+      categoryId: json['categoryId'] ?? 0,
+      type: json['type'] ?? '',
+      createdAt:
+          DateTime.parse(json['createdAt'] ?? '1970-01-01T00:00:00.000Z'),
+      updatedAt:
+          DateTime.parse(json['updatedAt'] ?? '1970-01-01T00:00:00.000Z'),
+      deletedAt:
+          json['deletedAt'] != null ? DateTime.parse(json['deletedAt']) : null,
     );
   }
 }

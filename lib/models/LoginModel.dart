@@ -8,6 +8,13 @@ class LoginModel {
     required this.user,
     required this.token,
   });
+  factory LoginModel.fromJson(Map<String, dynamic> json) {
+    return LoginModel(
+      message: json['message'],
+      user: User.fromJson(json['user']),
+      token: json['token'],
+    );
+  }
 }
 
 class User {
@@ -28,4 +35,15 @@ class User {
     required this.createdAt,
     required this.updatedAt,
   });
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      id: json['id'],
+      name: json['name'],
+      email: json['email'],
+      emailVerifiedAt: DateTime.parse(json['email_verified_at']),
+      role: json['role'],
+      createdAt: DateTime.parse(json['created_at']),
+      updatedAt: DateTime.parse(json['updated_at']),
+    );
+  }
 }

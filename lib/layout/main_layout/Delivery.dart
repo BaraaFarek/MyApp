@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 import 'app_cubit/app_cubit.dart';
@@ -31,16 +32,21 @@ class Delivery_screen extends StatelessWidget {
                         children: [
                           SizedBox(height: 20),
                           if (state is loadingDeliveryCompaniesState)
-                            Center(child: CircularProgressIndicator()),
+                            Center(
+                              child: SpinKitThreeBounce(
+                                color: Colors.purpleAccent,
+                                size: 20.0,
+                              ),
+                            ),
                           if (state is successDeliveryCompaniesState)
                             Container(
-                              height: 200, // ضبط ارتفاع مناسب
+                              height: 520, // ضبط ارتفاع مناسب
                               child: ListView.builder(
                                 itemCount: state.delivery.length,
                                 itemBuilder: (context, index) {
                                   final item = state.delivery[index];
                                   return Card(
-                                    color: Colors.white.withOpacity(0.9),
+                                    color: HexColor('F2F2F2'),
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Row(

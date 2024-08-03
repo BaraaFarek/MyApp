@@ -1,12 +1,12 @@
-class Deliverycomapanies {
-  final int id;
-  final String name;
-  final String phone;
-  final String description;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+class DeliveryCompaniesModel {
+  int id;
+  String name;
+  String phone;
+  String description;
+  DateTime createdAt;
+  DateTime updatedAt;
 
-  Deliverycomapanies({
+  DeliveryCompaniesModel({
     required this.id,
     required this.name,
     required this.phone,
@@ -15,8 +15,8 @@ class Deliverycomapanies {
     required this.updatedAt,
   });
 
-  factory Deliverycomapanies.fromJson(Map<String, dynamic> json) {
-    return Deliverycomapanies(
+  factory DeliveryCompaniesModel.fromJson(Map<String, dynamic> json) {
+    return DeliveryCompaniesModel(
       id: json['id'],
       name: json['name'],
       phone: json['phone'],

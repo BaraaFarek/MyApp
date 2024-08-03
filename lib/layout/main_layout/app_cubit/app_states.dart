@@ -2,6 +2,7 @@ import 'package:untitled/models/DeliveryComapanies.dart';
 import 'package:untitled/models/Products_Model.dart';
 
 import '../../../models/CategoriesModel.dart';
+import '../../../models/StoresByCategoryModel.dart';
 import '../../../models/StoresModel.dart';
 
 abstract class app_states {}
@@ -42,7 +43,7 @@ class loadingCategoriesState extends app_states {}
 
 /////////////////////////////////////////////////////////////////
 class successDeliveryCompaniesState extends app_states {
-  final List<Deliverycomapanies> delivery;
+  final List<DeliveryCompaniesModel> delivery;
   successDeliveryCompaniesState(this.delivery);
 }
 
@@ -67,3 +68,18 @@ class errorStoresByCategoryState extends app_states {
 }
 
 class loadingStoresByCategoryState extends app_states {}
+
+//////////////////////////////////////////////////////////////////
+class successStoresState extends app_states {
+  final List<StoresModel> stores;
+
+  successStoresState(this.stores);
+}
+
+class errorStoresState extends app_states {
+  final String error;
+
+  errorStoresState(this.error);
+}
+
+class loadingStoresState extends app_states {}

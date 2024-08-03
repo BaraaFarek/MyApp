@@ -1,4 +1,4 @@
-class ProductsModel {
+class ExternalServicesModel {
   int currentPage;
   List<Datum> data;
   String firstPageUrl;
@@ -13,7 +13,7 @@ class ProductsModel {
   int to;
   int total;
 
-  ProductsModel({
+  ExternalServicesModel({
     required this.currentPage,
     required this.data,
     required this.firstPageUrl,
@@ -28,6 +28,7 @@ class ProductsModel {
     required this.to,
     required this.total,
   });
+
 }
 
 class Datum {
@@ -54,6 +55,7 @@ class Datum {
     required this.createdAt,
     required this.updatedAt,
   });
+
 }
 
 class Link {
@@ -66,4 +68,5 @@ class Link {
     required this.label,
     required this.active,
   });
+
 }

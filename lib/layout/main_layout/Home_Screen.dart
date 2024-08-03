@@ -65,35 +65,35 @@ class _home1State extends State<home1> {
                 ),
               ),
             ),
-            drawer: Drawer(
-                child: ListView(
-              padding: EdgeInsets.zero,
-              children: <Widget>[
-                DrawerHeader(
-                  decoration: BoxDecoration(
-                    color: Colors.purpleAccent,
-                  ),
-                  child: Text(
-                    'Ballon',
-                    style: TextStyle(
-                      fontFamily: 'ITCKRIST.TTF',
-                      color: Colors.white,
-                      fontSize: 24,
-                    ),
-                  ),
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.person_pin,
-                    size: 32,
-                  ),
-                  title: Text('${userName}'),
-                  onTap: () {
-                    // Add functionality here
-                  },
-                ),
-              ],
-            )),
+            // drawer: Drawer(
+            //     child: ListView(
+            //   padding: EdgeInsets.zero,
+            //   children: <Widget>[
+            //     DrawerHeader(
+            //       decoration: BoxDecoration(
+            //         color: Colors.purpleAccent,
+            //       ),
+            //       child: Text(
+            //         'Ballon',
+            //         style: TextStyle(
+            //           fontFamily: 'ITCKRIST.TTF',
+            //           color: Colors.white,
+            //           fontSize: 24,
+            //         ),
+            //       ),
+            //     ),
+            //     ListTile(
+            //       leading: Icon(
+            //         Icons.person_pin,
+            //         size: 32,
+            //       ),
+            //       title: Text('${userName}'),
+            //       onTap: () {
+            //         // Add functionality here
+            //       },
+            //     ),
+            //   ],
+            // )),
             body: Appcubit.screens[Appcubit.currentindex],
             bottomNavigationBar: BottomNavigationBar(
               items: Appcubit.bottomItems,

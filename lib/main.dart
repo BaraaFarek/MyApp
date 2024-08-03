@@ -7,6 +7,7 @@ import 'package:untitled/layout/main_layout/app_cubit/app_states.dart';
 import 'package:untitled/shared/components/constants/themes.dart';
 import 'core/api_endpoints.dart';
 import 'layout/main_layout/Home_Screen.dart';
+import 'modules/Login&Register/Register_screen.dart';
 import 'modules/Login&Register/login_screen.dart';
 
 void main() async {
@@ -22,16 +23,15 @@ void main() async {
   else
     widget = Login_screen();
 
-  runApp(BlocProvider(
-      create: (context) => app_cubit(), child: MyApp(isdark!, widget)));
+  runApp(BlocProvider(create: (context) => app_cubit(), child: MyApp(widget)));
 }
 // color of appBar
 
 class MyApp extends StatelessWidget {
-  final bool isdark;
+  // final bool isdark;
   final Widget StartWidget;
 
-  MyApp(this.isdark, this.StartWidget);
+  MyApp(this.StartWidget);
 
 // This widget is the root of your application.
   @override

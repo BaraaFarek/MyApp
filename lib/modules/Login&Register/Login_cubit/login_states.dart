@@ -1,4 +1,5 @@
 import '../../../models/LoginModel.dart';
+import '../../../models/LogoutModel.dart';
 
 abstract class login_states {}
 
@@ -29,3 +30,19 @@ class Error_signup_states extends login_states {
 }
 
 class loading_signup_states extends login_states {}
+
+/////////////////////////////////////////////////
+class successLogoutstates extends login_states {
+  final LogoutModel logoutModel;
+
+  successLogoutstates(this.logoutModel);
+}
+
+class ErrorLogoutstates extends login_states {
+  final String error;
+
+  ErrorLogoutstates(this.error);
+}
+
+class loadingLogoutstates extends login_states {}
+/////////////////////////////////////////////////

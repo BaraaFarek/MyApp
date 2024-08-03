@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:untitled/Network/local/cache_Helper.dart';
+import 'package:untitled/modules/Login&Register/Register_screen.dart';
 
 import '../../layout/main_layout/Home_Screen.dart';
 import 'Login_cubit/login_cubit.dart';
@@ -62,7 +64,7 @@ class _login_screenState extends State<Login_screen> {
           EasyLoading.init();
           final loginCubit = context.read<login_cubit>();
           return Directionality(
-            textDirection: TextDirection.rtl,
+            textDirection: TextDirection.ltr,
             child: Scaffold(
               key: scaffoldKey,
               body: Container(
@@ -86,7 +88,7 @@ class _login_screenState extends State<Login_screen> {
                   child: SingleChildScrollView(
                     child: Container(
                       width: 340,
-                      height: 500,
+                      height: 400,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(17),
@@ -95,7 +97,7 @@ class _login_screenState extends State<Login_screen> {
                         key: loginCubit.form_key,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
-                              vertical: 50.0, horizontal: 20.0),
+                              vertical: 30.0, horizontal: 20.0),
                           child: Column(
                             children: [
                               Text(
@@ -238,15 +240,6 @@ class _login_screenState extends State<Login_screen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  TextButton(
-                                    onPressed: () {},
-                                    child: Text(
-                                      'Register',
-                                      style: TextStyle(
-                                        color: Colors.purple,
-                                      ),
-                                    ),
-                                  ),
                                   state is! loading_login_states
                                       ? ElevatedButton(
                                           onPressed: () {
@@ -259,10 +252,34 @@ class _login_screenState extends State<Login_screen> {
                                           style: ButtonStyle(
                                               minimumSize: MaterialStateProperty
                                                   .resolveWith((states) =>
-                                                      Size(160, 40))),
-                                          child: Text('login'))
+                                                      Size(120, 40))),
+                                          child: Text(
+                                            'login',
+                                            style: TextStyle(
+                                              color: Colors.purple,
+                                            ),
+                                          ))
                                       : Center(
-                                          child: CircularProgressIndicator()),
+                                          child: SpinKitThreeBounce(
+                                            color: Colors.purpleAccent,
+                                            size: 20.0,
+                                          ),
+                                        ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  RegisterScreen()));
+                                    },
+                                    child: Text(
+                                      'Don\'t have an account?',
+                                      style: TextStyle(
+                                        color: Colors.purple,
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ],

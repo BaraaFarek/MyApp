@@ -6,12 +6,16 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:untitled/Network/local/cache_Helper.dart';
 import 'package:untitled/layout/main_layout/Categories.dart';
 import 'package:untitled/layout/main_layout/Delivery.dart';
+import 'package:untitled/layout/main_layout/StoresScreen.dart';
 import 'package:untitled/layout/main_layout/app_cubit/app_states.dart';
 import 'package:untitled/layout/main_layout/shoppingCart.dart';
 import 'package:untitled/models/DeliveryComapanies.dart';
 import '../../../Network/remote/DioHelper.dart';
 import '../../../models/CategoriesModel.dart';
+import '../../../models/StoresByCategoryModel.dart';
 import '../../../models/StoresModel.dart';
+import '../ProfileScreen.dart';
+import '../StoresByCategory.dart';
 
 class app_cubit extends Cubit<app_states> {
   app_cubit() : super(initial_app_states());
@@ -22,7 +26,6 @@ class app_cubit extends Cubit<app_states> {
     emit(loadingCategoriesState());
     try {
       final response = await DioHelper.getData('api/category');
-      print(response?.data); // قم بإضافة هذا السطر للتحقق من البيانات المستلمة
       if (response?.statusCode == 200) {
         List<CategoriesModel> salats = (response?.data as List)
             .map((salat) => CategoriesModel.fromJson(salat))
@@ -35,6 +38,25 @@ class app_cubit extends Cubit<app_states> {
       }
     } catch (e) {
       emit(errorCategoriesState(e.toString()));
+    }
+  }
+
+  Future<void> fetchStores() async {
+    emit(loadingStoresState());
+    try {
+      final response = await DioHelper.getData('api/store');
+      if (response?.statusCode == 200) {
+        List<StoresModel> salats = (response?.data as List)
+            .map((salat) => StoresModel.fromJson(salat))
+            .toList();
+        emit(successStoresState(salats));
+      } else if (response?.statusCode == 401) {
+        emit(errorStoresState('Unauthorized'));
+      } else {
+        emit(errorStoresState('Something went wrong'));
+      }
+    } catch (e) {
+      emit(errorStoresState(e.toString()));
     }
   }
 
@@ -58,10 +80,9 @@ class app_cubit extends Cubit<app_states> {
     emit(loadingDeliveryCompaniesState());
     try {
       final response = await DioHelper.getData('api/deliveryCompanies');
-      print(response?.data); // قم بإضافة هذا السطر للتحقق من البيانات المستلمة
       if (response?.statusCode == 200) {
-        List<Deliverycomapanies> salats = (response?.data as List)
-            .map((salat) => Deliverycomapanies.fromJson(salat))
+        List<DeliveryCompaniesModel> salats = (response?.data as List)
+            .map((salat) => DeliveryCompaniesModel.fromJson(salat))
             .toList();
         emit(successDeliveryCompaniesState(salats));
       } else if (response?.statusCode == 401) {
@@ -81,6 +102,7 @@ class app_cubit extends Cubit<app_states> {
     CategoriesScreen(),
     shoppingCart_screen(),
     Delivery_screen(),
+    ProfileScreen(),
   ];
   List<BottomNavigationBarItem> bottomItems = [
     BottomNavigationBarItem(
@@ -88,20 +110,26 @@ class app_cubit extends Cubit<app_states> {
           Icons.home_outlined,
           size: 20,
         ),
-        label: 'الرئيسية'),
+        label: 'Home'),
     BottomNavigationBarItem(
       icon: Icon(
-        FontAwesomeIcons.cartShopping,
+        Icons.shopping_cart_outlined,
         size: 20,
       ),
-      label: 'السلة',
+      label: 'cart',
     ),
     BottomNavigationBarItem(
         icon: Icon(
           FontAwesomeIcons.shippingFast,
           size: 20,
         ),
-        label: 'توصيل'),
+        label: 'Delivery'),
+    BottomNavigationBarItem(
+        icon: Icon(
+          Icons.person_3_rounded,
+          size: 20,
+        ),
+        label: 'profile'),
   ];
 
   void changeIndex(int index) {
